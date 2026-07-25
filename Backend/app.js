@@ -13,6 +13,8 @@ import skillRouter from "./router/skillRoutes.js";
 import projectRouter from "./router/projectRoute.js";
 import educationRoute from "./router/educationRoute.js"
 import fs from "fs";
+import os from "os";
+import path from "path";
 
 
 const app = express();
@@ -30,13 +32,16 @@ app.use (cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-if (!fs.existsSync("./temp")) {
-    fs.mkdirSync("./temp", { recursive: true });
+// On Vercel the filesystem is read-only except for the OS temp dir (os.tmpdir()).
+// On Render/local, this still works fine too, so one config works everywhere.
+const tempDir = path.join(os.tmpdir(), "uploads");
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
 }
 
 app.use(fileUpload({
     useTempFiles: true,
-    tempFileDir: "./temp/",
+    tempFileDir: tempDir,
 }));
 
 app.use("/api/v1/message", messageRouter);
