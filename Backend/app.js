@@ -19,6 +19,7 @@ import path from "path";
 
 const app = express();
 dotenv.config({path: "./config/config.env"});
+dbConnection();
 
 app.use(cors({
     origin: [process.env.PORTFOLIO_URL, process.env.DASHBOARD_URL],
@@ -53,6 +54,6 @@ app.use("/api/v1/project", projectRouter);
 app.use("/api/v1/education", educationRoute); 
 
 
-dbConnection();
+
 app.use(errorMiddleware);
  export default app;
