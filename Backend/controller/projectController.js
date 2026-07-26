@@ -240,7 +240,9 @@ export const updateProject = catchAsyncError(async (req, res, next) => {
     const limitedFiles = filesArray.slice(0, 5);
 
     const project = await Project.findById(req.params.id);
-
+    if (!project) {
+      return next(new ErrorHandelar("Project Not Found!", 404));
+    }
     // Delete old images from Cloudinary
     if (project.projectImages && project.projectImages.length > 0) {
       for (const img of project.projectImages) {
